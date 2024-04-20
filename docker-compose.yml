@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build:
+      context: .
+      args:
+        - UID=${UID}
+    volumes:
+      - ./app:/app
+    expose:
+      - 8000
+    user: "${UID}:${UID}"
+  
+  nginx:
+    image: nginx:1.21.3-alpine
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    depends_on:
+      - web
