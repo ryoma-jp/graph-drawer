@@ -14,8 +14,7 @@ The file format is supported in `csv`.
 ## How to use
 
 ```
-docker-compose build
-docker-compose up
+./run.sh
 ```
 
 Acess to `http://localhost:5000` in your browser.
