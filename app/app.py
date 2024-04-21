@@ -32,9 +32,16 @@ def home():
         elif (request.form.get('post_type') == 'Apply'):
             graph_type = request.form.get('graph_type')
             
+            data = session['data']
+            x_axis = data[request.form.get('x_axis')]
+            y_axis = {key: data[key] for key in request.form.getlist('y_axis')}
+            
             params = {
-                'graph_type': graph_type
+                'graph_type': graph_type,
+                'x_axis': x_axis,
+                'y_axis': y_axis,
             }
+            print(f'params: {params}', file=sys.stderr)
             session['params'] = params
         
         return render_template('index.html', data=data, params=params)

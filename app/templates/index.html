@@ -28,6 +28,57 @@
                         <option value="scatter">Scatter Plot</option>
                     </select>
                 </div>
+
+                <div class="row mb-3">
+                    <label for="x_axis" class="col-sm-2 col-form-label">X-axis</label>
+                    <fieldset class="row mb-3">
+                        <div class="col-sm-10">
+                            {% for key in data.keys() %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="x_axis" id="radio_{{ key }}" value="{{ key }}" checked>
+                                    <label class="form-check-label" for="radio_{{ key }}">
+                                        {{ key }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            <!--
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                                <label class="form-check-label" for="gridRadios1">
+                                    First radio
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                                <label class="form-check-label" for="gridRadios2">
+                                    Second radio
+                                </label>
+                            </div>
+                            <div class="form-check disabled">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
+                                <label class="form-check-label" for="gridRadios3">
+                                    Third disabled radio
+                                </label>
+                            </div>
+                            -->
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="y_axis" class="col-sm-2 col-form-label">Y-axis</label>
+                        <div class="col-sm-10">
+                        {% for key in data.keys() %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="y_axis" id="check_{{ key }}" value="{{ key }}">
+                                <label class="form-check-label" for="check_{{ key }}">
+                                    {{ key }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        </div>
+                </div>                
+
                 <button type="submit" class="btn btn-primary" name="post_type" value="Apply">Apply</button>
             </form>
 
@@ -39,9 +90,9 @@
                     var chart = new Chart(ctx, {
                         type: '{{ params.graph_type }}',
                         data: {
-                            labels: {{ data.x }},
+                            labels: {{ params.x_axis }},
                             datasets: [
-                            {% for key, value in data.items() %}
+                            {% for key, value in params.y_axis.items() %}
                             {
                                 label: '{{ key }}',
                                 data: {{ value }},
