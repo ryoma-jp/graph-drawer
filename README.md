@@ -18,6 +18,3 @@ The file format is supported in `csv`.
 ```
 
 Acess to `http://localhost:5000` in your browser.
-
-
-

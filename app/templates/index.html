@@ -5,10 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Graph Drawer</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
     <div class="container">
-        <h1>Hello, World!</h1>
+        <div class="btn-group col-4 my-1" role="group">
+            <form method="POST" enctype="multipart/form-data">
+            <input type="file" class="form-control" name="file" accept=".csv" required>
+            <select name="graph_type" class="form-select">
+                <option value="line">Line Graph</option>
+                <option value="bar">Bar Graph</option>
+                <option value="scatter">Scatter Plot</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+        </div>
+
+        <canvas id="chart"></canvas>
+        <script>
+        {% if data %}
+            var ctx = document.getElementById('chart').getContext('2d');
+            {% autoescape false %}
+            var data = JSON.parse('{{ data }}');
+            {% endautoescape %}
+            var chart = new Chart(ctx, {
+                type: data.graph_type,
+                data: {
+                    labels: data.x,
+                    datasets: [{
+                        label: 'Dataset',
+                        data: data.y,
+                        fill: false,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                }
+            });
+        {% endif %}
+        </script>
     </div>
 </body>
 </html>
