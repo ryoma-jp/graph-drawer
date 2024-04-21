@@ -21,14 +21,4 @@ Access to `http://localhost:5000` in your browser.
 
 ### Execution sample using `sample_data/sample1/sample.csv`
 
-#### Line plot
-
-![Line plot of sample1.csv](./figures/sample1_line.png)
-
-#### Bar plot
-
-![Bar plot of sample1.csv](./figures/sample1_bar.png)
-
-#### Scatter plot
-
-![Scatter plot of sample1.csv](./figures/sample1_scatter.png)
+![GraphDrawer Demo](./figures/GraphDrawer-Demo.gif)
