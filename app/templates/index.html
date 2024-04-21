@@ -8,40 +8,54 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
     <div class="container">
-        <div class="btn-group col-4 my-1" role="group">
-            <form method="POST" enctype="multipart/form-data">
-            <input type="file" class="form-control" name="file" accept=".csv" required>
-            <select name="graph_type" class="form-select">
-                <option value="line">Line Graph</option>
-                <option value="bar">Bar Graph</option>
-                <option value="scatter">Scatter Plot</option>
-            </select>
-            <button type="submit" class="btn btn-primary">Upload</button>
+        <!-- Upload File -->
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row mb-3">
+                <label for="file" class="col-sm-2 col-form-label">Upload CSV File</label>
+                <input type="file" class="form-control" name="file" id="file" accept=".csv" required>
+            </div>
+        <button type="submit" class="btn btn-primary" name="post_type" value="Upload">Upload</button>
         </form>
-        </div>
 
-        <canvas id="chart"></canvas>
-        <script>
+        <!-- Set Graph Parameters -->
         {% if data %}
-            var ctx = document.getElementById('chart').getContext('2d');
-            {% autoescape false %}
-            var data = JSON.parse('{{ data }}');
-            {% endautoescape %}
-            var chart = new Chart(ctx, {
-                type: data.graph_type,
-                data: {
-                    labels: data.x,
-                    datasets: [{
-                        label: 'Dataset',
-                        data: data.y,
-                        fill: false,
-                        borderColor: 'rgb(75, 192, 192)',
-                        tension: 0.1
-                    }]
-                }
-            });
+            <form method="POST" enctype="multipart/form-data">
+                <div class="row mb-3">
+                    <label for="graph_type" class="col-sm-2 col-form-label">Graph Type</label>
+                    <select name="graph_type" id="graph_type" class="form-select">
+                        <option value="line">Line Graph</option>
+                        <option value="bar">Bar Graph</option>
+                        <option value="scatter">Scatter Plot</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" name="post_type" value="Apply">Apply</button>
+            </form>
+
+            <!-- Draw Graph -->
+            {% if params %}
+                <canvas id="chart"></canvas>
+                <script>
+                    var ctx = document.getElementById('chart').getContext('2d');
+                    {% autoescape false %}
+                    var data = JSON.parse('{{ data }}');
+                    var params = JSON.parse('{{ params }}');
+                    {% endautoescape %}
+                    var chart = new Chart(ctx, {
+                        type: params.graph_type,
+                        data: {
+                            labels: data.x,
+                            datasets: [{
+                                label: 'Dataset',
+                                data: data.y,
+                                fill: false,
+                                borderColor: 'rgb(75, 192, 192)',
+                                tension: 0.1
+                            }]
+                        }
+                    });
+                </script>
+            {% endif %}
         {% endif %}
-        </script>
     </div>
 </body>
 </html>
