@@ -26,7 +26,6 @@ def home():
             
             df = pd.read_csv(csv_file)
             data = {key: df[key].tolist() for key in df.columns}
-            data = json.dumps(data).replace("'", '"')
             session['data'] = data
             print(f'{data}', file=sys.stderr)
             
@@ -36,7 +35,6 @@ def home():
             params = {
                 'graph_type': graph_type
             }
-            params = json.dumps(params).replace("'", '"')
             session['params'] = params
         
         return render_template('index.html', data=data, params=params)

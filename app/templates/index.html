@@ -34,23 +34,21 @@
             <!-- Draw Graph -->
             {% if params %}
                 <canvas id="chart"></canvas>
-                <script>
+                <script type=text/javascript>
                     var ctx = document.getElementById('chart').getContext('2d');
-                    {% autoescape false %}
-                    var data = JSON.parse('{{ data }}');
-                    var params = JSON.parse('{{ params }}');
-                    {% endautoescape %}
                     var chart = new Chart(ctx, {
-                        type: params.graph_type,
+                        type: '{{ params.graph_type }}',
                         data: {
-                            labels: data.x,
-                            datasets: [{
-                                label: 'Dataset',
-                                data: data.y,
+                            labels: {{ data.x }},
+                            datasets: [
+                            {% for key, value in data.items() %}
+                            {
+                                label: '{{ key }}',
+                                data: {{ value }},
                                 fill: false,
-                                borderColor: 'rgb(75, 192, 192)',
-                                tension: 0.1
-                            }]
+                            },
+                            {% endfor %}
+                            ]
                         }
                     });
                 </script>
