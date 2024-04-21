@@ -17,7 +17,7 @@ The file format is supported in `csv`.
 ./run.sh
 ```
 
-Acess to `http://localhost:5000` in your browser.
+Access to `http://localhost:5000` in your browser.
 
 ### Execution sample using `sample_data/sample1/sample.csv`
 
