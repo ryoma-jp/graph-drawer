@@ -2,7 +2,7 @@ version: '3'
 services:
   web:
     build:
-      context: .
+      context: app/
       args:
         - UID=${UID}
     volumes:
@@ -21,3 +21,13 @@ services:
       - 5000
     depends_on:
       - web
+  
+  sample_data:
+    build:
+      context: sample_data/
+      args:
+        - UID=${UID}
+    volumes:
+      - ./sample_data:/sample_data
+    user: "${UID}:${UID}"
+    tty: true

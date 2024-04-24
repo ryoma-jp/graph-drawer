@@ -7,10 +7,10 @@ RUN groupadd -g ${UID} app_user && \
 
 WORKDIR /app
 
-COPY ./app/requirements.txt /app/requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY ./app /app
+COPY . /app
 
 CMD ["uwsgi", "--uid", "app_user", "--ini", "app.ini"]
