@@ -49,7 +49,8 @@ def home():
             
         elif (request.form.get('post_type') == 'Apply'):
             # --- load graph type ---
-            graph_type = request.form.get('graph_type')
+            graph_selected_index = [row[2] for row in status['graph_type']].index('selected')
+            graph_type = status['graph_type'][graph_selected_index][0]
             
             # --- set draw items ---
             data = session['data']
@@ -60,8 +61,6 @@ def home():
             
             # --- update status ---
             status = session['status']
-            graph_selected = ['selected' if key==graph_type else '' for key in GRAPH_VALUES]
-            status['graph_type'] = list(zip(GRAPH_VALUES, GRAPH_NAMES, graph_selected))
             status['radio'] = {key: '' for key in data.keys()}
             status['radio'][x_axis_key] = 'checked'
             status['checkbox'] = {key: '' for key in data.keys()}
@@ -77,6 +76,27 @@ def home():
             }
             print(f'params: {params}', file=sys.stderr)
             session['params'] = params
+        elif ('graph_type' in request.form):
+            graph_type = request.form.get('graph_type')
+            graph_selected = ['selected' if key==graph_type else '' for key in GRAPH_VALUES]
+            status['graph_type'] = list(zip(GRAPH_VALUES, GRAPH_NAMES, graph_selected))
+            print(f'status = {status}', file=sys.stderr)
+            session['status'] = status
+            
+            keys = list(data.keys())
+            x_axis_key = [key for key in keys if status['radio'][key]=='checked'][0]
+            x_axis = data[x_axis_key]
+            y_axis_keys = [key for key in keys if status['checkbox'][key]=='checked']
+            y_axis = {key: data[key] for key in y_axis_keys}
+            
+            params = {
+                'graph_type': graph_type,
+                'x_axis': x_axis,
+                'y_axis': y_axis,
+            }
+        else:
+            # --- no processes ---
+            pass
         
         return render_template('index.html', data=data, params=params, status=status)
     return render_template('index.html', status=status)

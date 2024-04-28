@@ -20,7 +20,7 @@
 
         <!-- Set Graph Parameters -->
         {% if data %}
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" id="graph_type_changed">
                 <div class="row mb-3">
                     <label for="graph_type" class="col-sm-2 col-form-label">Graph Type</label>
                     <select name="graph_type" id="graph_type" class="form-select">
@@ -29,7 +29,14 @@
                         {% endfor %}
                     </select>
                 </div>
+            </form>
+            <script type="text/javascript">
+                document.getElementById('graph_type').addEventListener('change', function() {
+                    document.getElementById('graph_type_changed').submit();
+                });
+            </script>
 
+            <form method="POST" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <label for="x_axis" class="col-sm-2 col-form-label">X-axis</label>
                     <fieldset class="row mb-3">
