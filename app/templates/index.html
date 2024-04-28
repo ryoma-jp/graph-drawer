@@ -37,6 +37,7 @@
             </script>
 
             <form method="POST" enctype="multipart/form-data">
+                {% if params.graph_type in ['line', 'bar', 'scatter'] %}
                 <div class="row mb-3">
                     <label for="x_axis" class="col-sm-2 col-form-label">X-axis</label>
                     <fieldset class="row mb-3">
@@ -55,23 +56,45 @@
 
                 <div class="row mb-3">
                     <label for="y_axis" class="col-sm-2 col-form-label">Y-axis</label>
-                        <div class="col-sm-10">
-                        {% for key in data.keys() %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="y_axis" id="check_{{ key }}" value="{{ key }}" {{ status.checkbox[key] }}>
-                                <label class="form-check-label" for="check_{{ key }}">
-                                    {{ key }}
-                                </label>
-                            </div>
-                        {% endfor %}
+                    <div class="col-sm-10">
+                    {% for key in data.keys() %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="y_axis" id="check_{{ key }}" value="{{ key }}" {{ status.checkbox[key] }}>
+                            <label class="form-check-label" for="check_{{ key }}">
+                                {{ key }}
+                            </label>
                         </div>
-                </div>                
+                    {% endfor %}
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Histogram -->
+                <div class="row mb-3">
+                    <label for="histogram_items" class="col-sm-2 col-form-label">Items</label>
+                    <div class="col-sm-10">
+                    {% for key in data.keys() %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="histogram_items" id="check_{{ key }}" value="{{ key }}" {{ status.histogram.checked[key] }}>
+                            <label class="form-check-label" for="check_{{ key }}">
+                                {{ key }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label for="histogram_bins" class="col-sm-2 col-form-label">Bins</label>
+                    <input class="form-control" type="number" step="1" id="histogram_bins" name="histogram_bins" placeholder="Bins" value="{{ status.histogram.bins }}">
+                </div>
+                {% endif %}
 
                 <button type="submit" class="btn btn-primary" name="post_type" value="Apply">Apply</button>
             </form>
 
             <!-- Draw Graph -->
-            {% if params %}
+            {% if params.x_axis and params.y_axis %}
                 <canvas id="chart"></canvas>
                 <script type=text/javascript>
                     var ctx = document.getElementById('chart').getContext('2d');
