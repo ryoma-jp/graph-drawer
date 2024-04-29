@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, session
 import pandas as pd
-import json
+import numpy as np
 import sys
 import secrets
 
@@ -27,6 +27,19 @@ def home():
             - 'params': Parameters of the graph.
             - 'status': Status of the application to keep the selected parameters.
     """
+    def caluculate_histogram(data, keys, bins):
+        """
+        Caluculate histogram data.
+        """
+        histogram_min, histogram_max = (min([min(data[key]) for key in keys]), max([max(data[key]) for key in keys]))
+        margin = (histogram_max - histogram_min) * 0.01     # 1% margin (tentaive)
+        histogram_min = histogram_min - margin
+        histogram_max = histogram_max + margin
+        x_axis = list(np.linspace(histogram_min, histogram_max, int(bins)+1))
+        histogram = {key: pd.cut(data[key], bins=x_axis).value_counts().sort_index().tolist() for key in keys}
+        
+        return x_axis, histogram
+    
     print(f'Request: {request}', file=sys.stderr)
     
     data = None if 'data' not in session else session['data']
@@ -63,6 +76,7 @@ def home():
                 'checked': {key: '' for key in df.columns},
                 'bins': '10',
             }
+            status['histogram']['checked'][df.columns[0]] = 'checked'
             print(f'status = {status}', file=sys.stderr)
             session['status'] = status
 
@@ -105,9 +119,14 @@ def home():
             else:
                 # --- histogram ---
                 data = session['data']
-                keys = request.form.getlist('keys')
-                items = {key: data[key] for key in keys}
-                bins = request.form.get('bins')
+                keys = request.form.getlist('histogram_items')
+                #items = {key: data[key] for key in keys}
+                bins = request.form.get('histogram_bins') if request.form.get('histogram_bins')!='' else '10'
+                
+                # --- caluculate histogram ---
+                x_axis, histogram = caluculate_histogram(data, keys, bins)
+                print(f'x_axis = {x_axis}', file=sys.stderr)
+                print(f'histogram = {histogram}', file=sys.stderr)
                 
                 # --- update status ---
                 status = session['status']
@@ -120,7 +139,8 @@ def home():
                 
                 params = {
                     'graph_type': graph_type,
-                    'histogram_items': items,
+                    'x_axis': x_axis,
+                    'histogram_items': histogram,
                     'histogram_bins': bins,
                 }
                 print(f'params: {params}', file=sys.stderr)
@@ -147,14 +167,20 @@ def home():
                 }
             else:
                 # --- histogram ---
+                data = session['data']
                 keys = list(data.keys())
                 keys = [key for key in keys if status['histogram']['checked'][key]=='checked']
-                items = {key: data[key] for key in keys}
                 bins = status['histogram']['bins']
+                
+                # --- caluculate histogram ---
+                x_axis, histogram = caluculate_histogram(data, keys, bins)
+                print(f'x_axis = {x_axis}', file=sys.stderr)
+                print(f'histogram = {histogram}', file=sys.stderr)
                 
                 params = {
                     'graph_type': graph_type,
-                    'histogram_items': items,
+                    'x_axis': x_axis,
+                    'histogram_items': histogram,
                     'histogram_bins': bins,
                 }
             

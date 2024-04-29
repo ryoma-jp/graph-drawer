@@ -86,7 +86,7 @@
 
                 <div class="row mb-3">
                     <label for="histogram_bins" class="col-sm-2 col-form-label">Bins</label>
-                    <input class="form-control" type="number" step="1" id="histogram_bins" name="histogram_bins" placeholder="Bins" value="{{ status.histogram.bins }}">
+                    <input class="form-control" type="number" step="1" id="histogram_bins" name="histogram_bins" placeholder="{{ status.histogram.bins }}" value="10">
                 </div>
                 {% endif %}
 
@@ -94,26 +94,50 @@
             </form>
 
             <!-- Draw Graph -->
-            {% if params.x_axis and params.y_axis %}
-                <canvas id="chart"></canvas>
-                <script type=text/javascript>
-                    var ctx = document.getElementById('chart').getContext('2d');
-                    var chart = new Chart(ctx, {
-                        type: '{{ params.graph_type }}',
-                        data: {
-                            labels: {{ params.x_axis }},
-                            datasets: [
-                            {% for key, value in params.y_axis.items() %}
-                            {
-                                label: '{{ key }}',
-                                data: {{ value }},
-                                fill: false,
-                            },
-                            {% endfor %}
-                            ]
-                        }
-                    });
-                </script>
+            {% if params.graph_type in ['line', 'bar', 'scatter'] %}
+                {% if params.x_axis and params.y_axis %}
+                    <canvas id="chart"></canvas>
+                    <script type=text/javascript>
+                        var ctx = document.getElementById('chart').getContext('2d');
+                        var chart = new Chart(ctx, {
+                            type: '{{ params.graph_type }}',
+                            data: {
+                                labels: {{ params.x_axis }},
+                                datasets: [
+                                {% for key, value in params.y_axis.items() %}
+                                {
+                                    label: '{{ key }}',
+                                    data: {{ value }},
+                                    fill: false,
+                                },
+                                {% endfor %}
+                                ]
+                            }
+                        });
+                    </script>
+                {% endif %}
+            {% else %}
+                {% if params.x_axis %}
+                    <canvas id="chart"></canvas>
+                    <script type=text/javascript>
+                        var ctx = document.getElementById('chart').getContext('2d');
+                        var chart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: {{ params.x_axis }},
+                                datasets: [
+                                {% for key, value in params.histogram_items.items() %}
+                                {
+                                    label: '{{ key }}',
+                                    data: {{ value }},
+                                    fill: false,
+                                },
+                                {% endfor %}
+                                ]
+                            }
+                        });
+                    </script>
+                {% endif %}
             {% endif %}
         {% endif %}
     </div>
