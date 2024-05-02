@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                {% else %}
+                {% elif params.graph_type in ['histogram'] %}
                 <!-- Histogram -->
                 <div class="row mb-3">
                     <label for="histogram_items" class="col-sm-2 col-form-label">Items</label>
@@ -88,9 +88,44 @@
                     <label for="histogram_bins" class="col-sm-2 col-form-label">Bins</label>
                     <input class="form-control" type="number" step="1" id="histogram_bins" name="histogram_bins" placeholder="{{ status.histogram.bins }}" value="{{ status.histogram.bins }}">
                 </div>
+
+                {% else %}
+                <!-- Summary Statistics -->
+                <table class="table table-striped-columns">
+                    <thead>
+                        <tr>
+                            <th>Column</th>
+                            <th>Count</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Mean</th>
+                            <th>Median</th>
+                            <th>Standard Deviation</th>
+                            <th>Interquartile Range</th>
+                            <th>95% Confidence Interval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, value in params.summary.items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value.count }}</td>
+                            <td>{{ value.min }}</td>
+                            <td>{{ value.max }}</td>
+                            <td>{{ value.mean }}</td>
+                            <td>{{ value.median }}</td>
+                            <td>{{ value.std }}</td>
+                            <td>{{ value.iqr }}</td>
+                            <td>{{ value.ci_95 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
                 {% endif %}
 
-                <button type="submit" class="btn btn-primary" name="post_type" value="Apply">Apply</button>
+                {% if params.graph_type in ['line', 'bar', 'scatter', 'histogram'] %}
+                    <button type="submit" class="btn btn-primary" name="post_type" value="Apply">Apply</button>
+                {% endif %}
             </form>
 
             <!-- Draw Graph -->
@@ -116,7 +151,7 @@
                         });
                     </script>
                 {% endif %}
-            {% else %}
+            {% elif params.graph_type in ['histogram'] %}
                 {% if params.x_axis %}
                     <canvas id="chart"></canvas>
                     <script type=text/javascript>

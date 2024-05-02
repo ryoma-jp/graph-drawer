@@ -7,8 +7,8 @@ import secrets
 app = Flask(__name__)
 app.secret_key = secrets.token_urlsafe(16)
 
-GRAPH_VALUES = ['line', 'bar', 'scatter', 'histogram']
-GRAPH_NAMES = ['Line Plot', 'Bar Plot', 'Scatter Plot', 'Histogram']
+GRAPH_VALUES = ['line', 'bar', 'scatter', 'histogram', 'summary_statistics']
+GRAPH_NAMES = ['Line Plot', 'Bar Plot', 'Scatter Plot', 'Histogram', 'Summary Statistics']
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -165,7 +165,7 @@ def home():
                     'x_axis': x_axis,
                     'y_axis': y_axis,
                 }
-            else:
+            elif (graph_type == 'histogram'):
                 # --- histogram ---
                 data = session['data']
                 keys = list(data.keys())
@@ -182,6 +182,27 @@ def home():
                     'x_axis': x_axis,
                     'histogram_items': histogram,
                     'histogram_bins': bins,
+                }
+            else:
+                # --- summary statistics ---
+                data = session['data']
+                
+                summary = {}
+                for key, value in data.items():
+                    summary[key] = {
+                        'count': len(value),
+                        'min': min(value),
+                        'max': max(value),
+                        'mean': np.mean(value),
+                        'median': np.median(value),
+                        'std': np.std(value),
+                        'iqr': np.percentile(value, 75) - np.percentile(value, 25),         # Interquartile Range
+                        'ci_95': (np.percentile(value, 2.5), np.percentile(value, 97.5)),   # 95% Confidence Interval
+                    }
+                
+                params = {
+                    'graph_type': graph_type,
+                    'summary': summary,
                 }
             
         else:
