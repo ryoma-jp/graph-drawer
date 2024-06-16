@@ -137,6 +137,7 @@
                         var chart = new Chart(ctx, {
                             type: '{{ params.graph_type }}',
                             data: {
+                                {% autoescape false %}
                                 labels: {{ params.x_axis }},
                                 datasets: [
                                 {% for key, value in params.y_axis.items() %}
@@ -147,6 +148,7 @@
                                 },
                                 {% endfor %}
                                 ]
+                                {% endautoescape %}
                             }
                         });
                     </script>
