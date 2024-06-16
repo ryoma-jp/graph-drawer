@@ -206,6 +206,9 @@ def home():
                     pickle.dump(params, f)
             else:
                 # --- summary statistics ---
+                df_data = pd.DataFrame(data)
+                statistics_keys = [key for key in df_data.columns if df_data.dtypes[key]!='object']
+                data = {key: df_data[key].tolist() for key in statistics_keys}
                 summary = {}
                 for key, value in data.items():
                     summary[key] = {
@@ -217,6 +220,7 @@ def home():
                         'std': np.std(value),
                         'iqr': np.percentile(value, 75) - np.percentile(value, 25),         # Interquartile Range
                         'ci_95': (np.percentile(value, 2.5), np.percentile(value, 97.5)),   # 95% Confidence Interval
+                        'null_count': df_data[key].isnull().sum(),
                     }
                 
                 params = {

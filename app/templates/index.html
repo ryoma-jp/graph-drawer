@@ -103,6 +103,7 @@
                             <th>Standard Deviation</th>
                             <th>Interquartile Range</th>
                             <th>95% Confidence Interval</th>
+                            <th>Null Count</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -117,6 +118,7 @@
                             <td>{{ value.std }}</td>
                             <td>{{ value.iqr }}</td>
                             <td>{{ value.ci_95 }}</td>
+                            <td>{{ value.null_count }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
