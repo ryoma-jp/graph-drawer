@@ -83,11 +83,14 @@ def home():
             status['radio'] = {key: '' for key in data_keys}
             status['radio'][data_keys[0]] = 'checked'
             status['checkbox'] = {key: '' for key in data_keys}
+            
+            df_data = pd.DataFrame(data)
+            histogram_checked = ['disabled' if dtype_object else 'checked' for dtype_object in df_data.dtypes=='object']
             status['histogram'] = {
-                'checked': {key: '' for key in data_keys},
+                'checked': {key: value for key, value in zip(data_keys, histogram_checked)},
                 'bins': '10',
             }
-            status['histogram']['checked'][data_keys[0]] = 'checked'
+            
             print(f'type(session["csv_file"]) = {type(session["csv_file"])}', file=sys.stderr)
             print(f'type(status["file"]) = {type(status["file"])}', file=sys.stderr)
             print(f'status = {status}', file=sys.stderr)
