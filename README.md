@@ -36,3 +36,15 @@ docker-compose exec sample_data bash
 cd sample2_iris
 python create_iris_csv.py 
 ```
+
+#### [sample3_tokyo-weather-data_csv](./sample_data/sample3_tokyo-weather-data_csv/)
+
+`csv`file only.
+
+#### [sample4_coco-annotations_csv](./sample_data/sample4_coco-annotations_csv/)
+
+```
+docker-compose exec sample_data bash
+cd sample4_coco-annotations_csv
+./create_csv.sh
+```
