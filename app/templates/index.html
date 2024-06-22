@@ -140,7 +140,6 @@
                             type: '{{ params.graph_type }}',
                             data: {
                                 {% autoescape false %}
-                                labels: {{ params.x_axis }},
                                 datasets: [
                                 {% for key, value in params.y_axis.items() %}
                                 {
@@ -151,6 +150,16 @@
                                 {% endfor %}
                                 ]
                                 {% endautoescape %}
+                            },
+                            options: {
+                                scales: {
+                                    x: {
+                                        {% autoescape false %}
+                                        type: '{{ params.x_axis_type }}',
+                                        labels: {{ params.x_axis }},
+                                        {% endautoescape %}
+                                    }
+                                }
                             }
                         });
                     </script>

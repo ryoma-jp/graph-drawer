@@ -113,6 +113,7 @@ def home():
                 # --- set draw items ---
                 x_axis_key = request.form.get('x_axis')
                 x_axis = data[x_axis_key]
+                x_axis_type = 'category' if isinstance(x_axis[0], str) else 'linear'
                 y_axis_keys = request.form.getlist('y_axis')
                 y_axis = {key: data[key] for key in y_axis_keys}
                 
@@ -130,6 +131,7 @@ def home():
                 params = {
                     'graph_type': graph_type,
                     'x_axis': x_axis,
+                    'x_axis_type': x_axis_type,
                     'y_axis': y_axis,
                 }
                 print(f'params: {params}', file=sys.stderr)
@@ -175,12 +177,14 @@ def home():
                 keys = list(data.keys())
                 x_axis_key = [key for key in keys if status['radio'][key]=='checked'][0]
                 x_axis = data[x_axis_key]
+                x_axis_type = 'category' if isinstance(x_axis[0], str) else 'linear'
                 y_axis_keys = [key for key in keys if status['checkbox'][key]=='checked']
                 y_axis = {key: data[key] for key in y_axis_keys}
                 
                 params = {
                     'graph_type': graph_type,
                     'x_axis': x_axis,
+                    'x_axis_type': x_axis_type,
                     'y_axis': y_axis,
                 }
                 with open(PICKLE_PATH, 'wb') as f:
